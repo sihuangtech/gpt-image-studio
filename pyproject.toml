@@ -1,0 +1,17 @@
+[project]
+name = "gpt-images-generator"
+version = "0.1.0"
+description = "一个同时支持 CLI、桌面 GUI 和 Web 的 GPT 系列生图客户端"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.99.0",
+  "nicegui>=2.0.0",
+  "pyside6>=6.7.0",
+  "python-dotenv>=1.0.1",
+  "pillow>=10.0.0",
+]
+
+[project.scripts]
+gpt-image-cli = "src.cli:main"
+gpt-image-web = "src.web_app:main"
+gpt-image-gui = "src.gui:main"
