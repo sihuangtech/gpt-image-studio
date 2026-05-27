@@ -55,7 +55,7 @@ def index() -> None:
     with ui.column().classes("w-full min-h-screen px-5 py-6 items-center"):
         with ui.row().classes("w-full max-w-7xl gap-5 items-stretch"):
             with ui.card().classes("glass w-full md:w-[430px] rounded-lg p-5"):
-                ui.label("GPT Image Generator").classes("text-3xl font-bold text-[#17201c]")
+                ui.label("GPT Image Studio").classes("text-3xl font-bold text-[#17201c]")
                 ui.label("Create image files with OpenAI GPT Image models from CLI, desktop, or browser.").classes(
                     "text-[#5c665f] leading-6"
                 )
@@ -122,8 +122,7 @@ def index() -> None:
 
 def main() -> None:
     port = int(os.getenv("WEB_PORT", "5000"))
-    ui.run(host="127.0.0.1", port=port, title="GPT Image Generator", reload=False)
-
+    ui.run(host="127.0.0.1", port=port, title="GPT Image Studio", reload=False)
 
 if __name__ == "__main__":
     main()

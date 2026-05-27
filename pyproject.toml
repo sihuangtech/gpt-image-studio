@@ -1,7 +1,7 @@
 [project]
 name = "gpt-images-generator"
 version = "0.1.0"
-description = "一个同时支持 CLI、桌面 GUI 和 Web 的 GPT 系列生图客户端"
+description = "一个同时支持 CLI、桌面 GUI 和 Web 的 GPT Image Studio"
 requires-python = ">=3.10"
 dependencies = [
   "openai>=1.99.0",

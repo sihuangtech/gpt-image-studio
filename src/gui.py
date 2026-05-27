@@ -62,7 +62,7 @@ class ImageGeneratorWindow(QMainWindow):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("GPT Image Generator")
+        self.setWindowTitle("GPT Image Studio")
         self.resize(1040, 720)
         self.thread_pool = QThreadPool.globalInstance()
 
@@ -110,7 +110,7 @@ class ImageGeneratorWindow(QMainWindow):
         form_layout.setContentsMargins(20, 20, 20, 20)
         form_layout.setSpacing(14)
 
-        title = QLabel("GPT Image Generator")
+        title = QLabel("GPT Image Studio")
         title.setObjectName("title")
         subtitle = QLabel("Generate images from prompts with OpenAI GPT Image models.")
         subtitle.setObjectName("subtitle")

@@ -1,4 +1,4 @@
-# GPT 系列生图客户端
+# GPT Image Studio
 
 这是一个基于 OpenAI GPT Image 系列模型的 Python 生图客户端，提供三种入口：
 
