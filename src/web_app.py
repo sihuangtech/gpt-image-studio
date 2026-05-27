@@ -63,10 +63,14 @@ def index() -> None:
                 prompt = ui.textarea("Prompt", placeholder="A cinematic poster of a warm cyberpunk morning...").classes(
                     "w-full"
                 )
-                model = ui.select(SUPPORTED_MODELS, value=SUPPORTED_MODELS[0], label="Model").classes("w-full")
+                model_options = list(SUPPORTED_MODELS)
+                size_options = list(SUPPORTED_SIZES)
+                quality_options = list(SUPPORTED_QUALITIES)
+
+                model = ui.select(model_options, value=model_options[0], label="Model").classes("w-full")
                 with ui.row().classes("w-full gap-3"):
-                    size = ui.select(SUPPORTED_SIZES, value="1024x1024", label="Size").classes("flex-1")
-                    quality = ui.select(SUPPORTED_QUALITIES, value="high", label="Quality").classes("flex-1")
+                    size = ui.select(size_options, value="1024x1024", label="Size").classes("flex-1")
+                    quality = ui.select(quality_options, value="high", label="Quality").classes("flex-1")
                 with ui.row().classes("w-full gap-3"):
                     count = ui.number("Count", value=1, min=1, max=10, step=1).classes("flex-1")
                     output_dir = ui.input("Output directory", value="outputs").classes("flex-[2]")

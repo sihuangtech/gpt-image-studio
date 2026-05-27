@@ -15,8 +15,8 @@ from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
     QFileDialog,
-    QFormLayout,
     QFrame,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -63,12 +63,12 @@ class ImageGeneratorWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("GPT Image Studio")
-        self.resize(1040, 720)
+        self.resize(1120, 760)
         self.thread_pool = QThreadPool.globalInstance()
 
         self.prompt_input = QTextEdit()
         self.prompt_input.setPlaceholderText("Describe the image you want to create...")
-        self.prompt_input.setMinimumHeight(140)
+        self.prompt_input.setMinimumHeight(190)
 
         self.model_select = QComboBox()
         self.model_select.addItems(SUPPORTED_MODELS)
@@ -86,11 +86,14 @@ class ImageGeneratorWindow(QMainWindow):
         self.count_input.setValue(1)
 
         self.output_dir_input = QLineEdit("outputs")
+        self.browse_button = QPushButton("Browse")
         self.generate_button = QPushButton("Generate")
         self.status_label = QLabel("Ready")
-        self.preview_label = QLabel("Generated images will appear here.")
+        self.preview_label = QLabel("No image yet")
+        self.preview_label.setObjectName("emptyPreview")
         self.preview_label.setAlignment(Qt.AlignCenter)
-        self.preview_label.setMinimumSize(520, 420)
+        self.preview_label.setMinimumSize(560, 500)
+        self.preview_label.setWordWrap(True)
 
         self._build_layout()
         self._apply_style()
@@ -100,41 +103,46 @@ class ImageGeneratorWindow(QMainWindow):
         self.setCentralWidget(central)
 
         root = QHBoxLayout(central)
-        root.setContentsMargins(18, 18, 18, 18)
-        root.setSpacing(18)
+        root.setContentsMargins(22, 22, 22, 22)
+        root.setSpacing(22)
 
         form_card = QFrame()
         form_card.setObjectName("card")
-        form_card.setFixedWidth(390)
+        form_card.setFixedWidth(430)
         form_layout = QVBoxLayout(form_card)
-        form_layout.setContentsMargins(20, 20, 20, 20)
-        form_layout.setSpacing(14)
+        form_layout.setContentsMargins(26, 26, 26, 26)
+        form_layout.setSpacing(18)
 
         title = QLabel("GPT Image Studio")
         title.setObjectName("title")
-        subtitle = QLabel("Generate images from prompts with OpenAI GPT Image models.")
+        subtitle = QLabel("Prompt, tune, generate, and preview local image files.")
         subtitle.setObjectName("subtitle")
         subtitle.setWordWrap(True)
 
-        form = QFormLayout()
-        form.setLabelAlignment(Qt.AlignLeft)
-        form.addRow("Prompt", self.prompt_input)
-        form.addRow("Model", self.model_select)
-        form.addRow("Size", self.size_select)
-        form.addRow("Quality", self.quality_select)
-        form.addRow("Count", self.count_input)
+        options_grid = QGridLayout()
+        options_grid.setHorizontalSpacing(12)
+        options_grid.setVerticalSpacing(14)
+        options_grid.addLayout(self._field("Model", self.model_select), 0, 0)
+        options_grid.addLayout(self._field("Size", self.size_select), 0, 1)
+        options_grid.addLayout(self._field("Quality", self.quality_select), 1, 0)
+        options_grid.addLayout(self._field("Count", self.count_input), 1, 1)
 
         output_row = QHBoxLayout()
-        browse_button = QPushButton("Browse")
-        browse_button.clicked.connect(self._choose_output_dir)
+        output_row.setSpacing(10)
+        self.browse_button.setObjectName("secondaryButton")
+        self.browse_button.clicked.connect(self._choose_output_dir)
         output_row.addWidget(self.output_dir_input, 1)
-        output_row.addWidget(browse_button)
-        form.addRow("Output", output_row)
+        output_row.addWidget(self.browse_button)
 
         self.generate_button.clicked.connect(self._start_generate)
+        self.generate_button.setObjectName("primaryButton")
         form_layout.addWidget(title)
         form_layout.addWidget(subtitle)
-        form_layout.addLayout(form)
+        form_layout.addSpacing(4)
+        form_layout.addLayout(self._field("Prompt", self.prompt_input))
+        form_layout.addLayout(options_grid)
+        form_layout.addLayout(self._field("Output folder", output_row))
+        form_layout.addSpacing(2)
         form_layout.addWidget(self.generate_button)
         form_layout.addWidget(self.status_label)
         form_layout.addStretch()
@@ -142,50 +150,119 @@ class ImageGeneratorWindow(QMainWindow):
         preview_card = QFrame()
         preview_card.setObjectName("previewCard")
         preview_layout = QVBoxLayout(preview_card)
-        preview_layout.setContentsMargins(20, 20, 20, 20)
+        preview_layout.setContentsMargins(24, 24, 24, 24)
+        preview_layout.setSpacing(16)
+        preview_header = QLabel("Preview")
+        preview_header.setObjectName("sectionTitle")
+        preview_hint = QLabel("Generated images are saved locally and shown here.")
+        preview_hint.setObjectName("hint")
+        preview_hint.setWordWrap(True)
+        preview_layout.addWidget(preview_header)
+        preview_layout.addWidget(preview_hint)
         preview_layout.addWidget(self.preview_label, 1)
 
         root.addWidget(form_card)
         root.addWidget(preview_card, 1)
 
+    def _field(self, label_text: str, widget_or_layout: QWidget | QHBoxLayout) -> QVBoxLayout:
+        layout = QVBoxLayout()
+        layout.setSpacing(7)
+        label = QLabel(label_text)
+        label.setObjectName("fieldLabel")
+        layout.addWidget(label)
+        if isinstance(widget_or_layout, QWidget):
+            layout.addWidget(widget_or_layout)
+        else:
+            layout.addLayout(widget_or_layout)
+        return layout
+
     def _apply_style(self) -> None:
         self.setStyleSheet(
             """
-            QMainWindow { background: #eef2ef; }
+            QMainWindow { background: #f3f4f1; }
             QFrame#card, QFrame#previewCard {
                 background: #ffffff;
-                border: 1px solid #d8ded7;
+                border: 1px solid #dfe4df;
                 border-radius: 8px;
             }
             QLabel#title {
-                color: #17201c;
-                font-size: 24px;
+                color: #111815;
+                font-size: 28px;
                 font-weight: 700;
             }
-            QLabel#subtitle, QLabel {
-                color: #5c665f;
+            QLabel#subtitle {
+                color: #68746d;
+                font-size: 14px;
+                line-height: 20px;
+            }
+            QLabel#sectionTitle {
+                color: #111815;
+                font-size: 18px;
+                font-weight: 700;
+            }
+            QLabel#hint, QLabel#emptyPreview, QLabel {
+                color: #68746d;
                 font-size: 13px;
             }
-            QTextEdit, QLineEdit, QComboBox, QSpinBox {
-                background: #fbfcfa;
-                border: 1px solid #cad3cc;
-                border-radius: 6px;
-                padding: 8px;
-                color: #17201c;
+            QLabel#fieldLabel {
+                color: #35413b;
+                font-size: 12px;
+                font-weight: 700;
             }
-            QPushButton {
-                background: #166b5f;
+            QTextEdit, QLineEdit, QComboBox, QSpinBox {
+                background: #fbfcfb;
+                border: 1px solid #cfd8d1;
+                border-radius: 6px;
+                color: #111815;
+                font-size: 14px;
+                min-height: 36px;
+                padding: 8px 10px;
+                selection-background-color: #0f766e;
+            }
+            QTextEdit {
+                line-height: 20px;
+            }
+            QTextEdit:focus, QLineEdit:focus, QComboBox:focus, QSpinBox:focus {
+                border: 1px solid #0f766e;
+                background: #ffffff;
+            }
+            QPushButton#primaryButton {
+                background: #0f766e;
                 color: #ffffff;
                 border: none;
                 border-radius: 6px;
+                min-height: 42px;
                 padding: 10px 14px;
+                font-size: 14px;
                 font-weight: 700;
             }
-            QPushButton:disabled {
-                background: #9aa8a1;
+            QPushButton#primaryButton:hover {
+                background: #0b625c;
             }
-            QLabel[frameShape="4"] {
-                border: 1px solid #d8ded7;
+            QPushButton#primaryButton:disabled {
+                background: #9ca9a2;
+            }
+            QPushButton#secondaryButton {
+                background: #eef3f0;
+                color: #0f4f49;
+                border: 1px solid #cfd8d1;
+                border-radius: 6px;
+                min-height: 36px;
+                padding: 8px 14px;
+                font-weight: 700;
+            }
+            QPushButton#secondaryButton:hover {
+                background: #e3ebe7;
+            }
+            QLabel#emptyPreview {
+                background: #f8faf8;
+                border: 1px dashed #cbd6cf;
+                border-radius: 8px;
+                font-size: 15px;
+            }
+            QComboBox::drop-down {
+                border: none;
+                width: 28px;
             }
             """
         )
