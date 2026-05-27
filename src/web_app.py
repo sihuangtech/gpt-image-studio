@@ -124,5 +124,6 @@ def main() -> None:
     port = int(os.getenv("WEB_PORT", "5000"))
     ui.run(host="127.0.0.1", port=port, title="GPT Image Studio", reload=False)
 
+
 if __name__ == "__main__":
     main()
