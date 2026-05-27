@@ -1,0 +1,25 @@
+{
+  "default": "gpt-image-2",
+  "models": [
+    {
+      "id": "gpt-image-2",
+      "label": "GPT Image 2",
+      "description": "Latest state-of-the-art GPT Image model"
+    },
+    {
+      "id": "gpt-image-1.5",
+      "label": "GPT Image 1.5",
+      "description": "Previous high-quality GPT Image model"
+    },
+    {
+      "id": "gpt-image-1",
+      "label": "GPT Image 1",
+      "description": "Previous GPT Image model"
+    },
+    {
+      "id": "gpt-image-1-mini",
+      "label": "GPT Image 1 Mini",
+      "description": "Cost-efficient GPT Image model"
+    }
+  ]
+}

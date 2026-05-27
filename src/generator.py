@@ -16,9 +16,10 @@ from typing import Iterable
 from openai import OpenAI
 
 from .config import get_config
+from .models import load_model_config
 
 
-SUPPORTED_MODELS = ("gpt-image-1.5", "gpt-image-1", "gpt-image-1-mini")
+SUPPORTED_MODELS = load_model_config().ids
 SUPPORTED_SIZES = ("1024x1024", "1024x1536", "1536x1024", "auto")
 SUPPORTED_QUALITIES = ("auto", "low", "medium", "high")
 SUPPORTED_FORMATS = ("png", "jpeg", "webp")
@@ -29,7 +30,7 @@ class ImageRequest:
     """一次生图请求的参数。"""
 
     prompt: str
-    model: str = "gpt-image-1.5"
+    model: str = load_model_config().default
     size: str = "1024x1024"
     quality: str = "high"
     count: int = 1

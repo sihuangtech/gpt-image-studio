@@ -11,6 +11,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .models import load_model_config
+
 
 load_dotenv()
 
@@ -27,8 +29,9 @@ class AppConfig:
 def get_config() -> AppConfig:
     """从环境变量生成配置对象。"""
 
+    model_config = load_model_config()
     return AppConfig(
         api_key=os.getenv("OPENAI_API_KEY"),
-        default_model=os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-1.5"),
+        default_model=os.getenv("OPENAI_IMAGE_MODEL", model_config.default),
         output_dir=Path(os.getenv("IMAGE_OUTPUT_DIR", "outputs")),
     )
