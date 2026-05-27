@@ -58,14 +58,18 @@ def generate_images(request: ImageRequest, api_key: str | None = None) -> list[G
     if not request.prompt.strip():
         raise ValueError("提示词不能为空。")
 
-    key = api_key or get_config().api_key
+    config = get_config()
+    key = api_key or config.api_key
     if not key:
         raise RuntimeError("未设置 OPENAI_API_KEY。请先复制 .env.example 为 .env 并填写 API Key。")
 
     _validate_request(request)
 
     request.output_dir.mkdir(parents=True, exist_ok=True)
-    client = OpenAI(api_key=key)
+    client_options = {"api_key": key}
+    if config.base_url:
+        client_options["base_url"] = config.base_url
+    client = OpenAI(**client_options)
 
     # GPT Image 系列模型支持 size、quality、output_format、background 等参数。
     response = client.images.generate(

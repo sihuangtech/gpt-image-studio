@@ -22,6 +22,7 @@ class AppConfig:
     """应用运行所需的基础配置。"""
 
     api_key: str | None
+    base_url: str | None
     default_model: str
     output_dir: Path
 
@@ -32,6 +33,7 @@ def get_config() -> AppConfig:
     model_config = load_model_config()
     return AppConfig(
         api_key=os.getenv("OPENAI_API_KEY"),
+        base_url=os.getenv("OPENAI_BASE_URL") or None,
         default_model=os.getenv("OPENAI_IMAGE_MODEL", model_config.default),
         output_dir=Path(os.getenv("IMAGE_OUTPUT_DIR", "outputs")),
     )

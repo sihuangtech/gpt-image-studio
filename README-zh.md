@@ -40,9 +40,12 @@ OPENAI_API_KEY=sk-your-api-key
 可选配置：
 
 ```bash
+OPENAI_BASE_URL=https://your-proxy.example.com/v1
 OPENAI_IMAGE_MODEL=gpt-image-2
 IMAGE_OUTPUT_DIR=outputs
 ```
+
+使用 OpenAI 官方接口时不要设置 `OPENAI_BASE_URL`。使用 OpenAI 兼容中转站或代理服务时，把它设置成服务商提供的 API Base URL。
 
 `OPENAI_IMAGE_MODEL` 会覆盖 `models.json` 里的默认模型。
 

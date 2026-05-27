@@ -40,9 +40,12 @@ OPENAI_API_KEY=sk-your-api-key
 Optional:
 
 ```bash
+OPENAI_BASE_URL=https://your-proxy.example.com/v1
 OPENAI_IMAGE_MODEL=gpt-image-2
 IMAGE_OUTPUT_DIR=outputs
 ```
+
+Leave `OPENAI_BASE_URL` unset when using the official OpenAI API. Set it only for OpenAI-compatible proxy providers or relay services, using the provider's API base URL.
 
 `OPENAI_IMAGE_MODEL` overrides the default from `models.json`.
 
